@@ -48,7 +48,7 @@ curl --insecure --proxy http://127.0.0.1:18080  https://127.0.0.1:8000
 >> response.text
 ```
 
-## High concurrency
+## High concurrency: Local
 ```bash
 
 # run this to spread to all the CPUs running on a PC
@@ -57,7 +57,7 @@ uvicorn --ssl-certfile ssl/joined.pem \
     app:app
 ```
 
-##
+## High concurrency: Production
 ```bash
 pip install gunicorn
 
