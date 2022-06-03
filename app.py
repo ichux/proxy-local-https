@@ -9,7 +9,7 @@ logger = logging.getLogger("uvicorn.access")
 
 logger.handlers[0].setFormatter(
     uvicorn.logging.ColourizedFormatter(
-        "{asctime} {levelprefix} {message}", style="{", use_colors=True
+        "{asctime} - {name} - {levelprefix} - {message}", style="{", use_colors=True
     )
 )
 

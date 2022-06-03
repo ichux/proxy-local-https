@@ -74,6 +74,6 @@ To test manually while the app is running, you can send a lot of requests with `
 ```bash
 for i in {1..1000};
     do curl -XPOST --cacert ssl/client.pem  https://127.0.0.1:8000 \
-    -d "{\"id\": $RANDOM, \"data\": 909090}";
+    -d "{\"id\": $RANDOM, \"data\": $RANDOM}";
 done
 ```
