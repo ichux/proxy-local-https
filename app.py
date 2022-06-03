@@ -1,28 +1,28 @@
 import json
+
 import aiohttp
 from aiohttp.client_exceptions import ClientError, ClientOSError
 
+
 async def read_body(receive):
-    body = b''
+    body = b""
     more_body = True
 
     while more_body:
         message = await receive()
-        body += message.get("body", b'')
+        body += message.get("body", b"")
         more_body = message.get("more_body", False)
 
     return body
 
 
 async def send_data(_id, data):
-    url = f"https://127.0.0.1:9200/csdp/_doc/{_id}"
-
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(limit=0), trust_env=True
     ) as session:
         try:
             async with session.put(
-                url,
+                f"https://127.0.0.1:9200/csdp/_doc/{_id}",
                 json=data,
                 auth=aiohttp.BasicAuth("admin", "admin"),
                 ssl=False,
@@ -54,6 +54,6 @@ async def app(scope, receive, send):
     await send(
         {
             "type": "http.response.body",
-            "body": b'',
+            "body": b"",
         }
     )
