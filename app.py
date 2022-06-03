@@ -7,7 +7,6 @@ from aiohttp.client_exceptions import ClientError, ClientOSError
 
 from logs import JobLog
 
-logger = logging.getLogger(__name__)
 logger = JobLog.make_logger(Path(__file__).with_name("config.json"))
 
 
