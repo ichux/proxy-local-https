@@ -17,14 +17,12 @@ async def read_body(receive):
 
 
 async def send_data(_id, data):
-    url = f"https://127.0.0.1:9200/csdp/_doc/{_id}"
-
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(limit=0), trust_env=True
     ) as session:
         try:
             async with session.put(
-                url,
+                f"https://127.0.0.1:9200/csdp/_doc/{_id}",
                 json=data,
                 auth=aiohttp.BasicAuth("admin", "admin"),
                 ssl=False,
