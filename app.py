@@ -1,14 +1,16 @@
 import json
+
 import aiohttp
 from aiohttp.client_exceptions import ClientError, ClientOSError
 
+
 async def read_body(receive):
-    body = b''
+    body = b""
     more_body = True
 
     while more_body:
         message = await receive()
-        body += message.get("body", b'')
+        body += message.get("body", b"")
         more_body = message.get("more_body", False)
 
     return body
@@ -54,6 +56,6 @@ async def app(scope, receive, send):
     await send(
         {
             "type": "http.response.body",
-            "body": b'',
+            "body": b"",
         }
     )
