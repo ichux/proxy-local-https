@@ -13,3 +13,4 @@ python-dotenv
 httptools
 anyio
 watchgod
+aiohttp
