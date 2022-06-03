@@ -1,5 +1,6 @@
 ## Assumptions made:
 - You have your environment set up and in a virtual environment
+- You have an OpenSearch node or cluster running on https://localhost:9200
 - Minimum Python version: 3.10
 - Your port `18080` is accessible, else, replace it with `$RANDOM`.
 - If you replaced your port with `$RANDOM`, also be sure to replace it with the real value where you see `18080`.
@@ -65,4 +66,11 @@ gunicorn --preload --certfile ssl/joined.pem \
     app:app \
     -w $(echo `python3 -c "import os; print(os.cpu_count())"`) \
     -k uvicorn.workers.UvicornWorker
+```
+
+## Manual Testing
+To test manually while the app is running, you can send a lot of requests with `curl`.
+
+```bash
+for i in {1..1000}; do curl -XPOST --cacert ssl/client.pem  https://127.0.0.1:8000 -d "{\"id\": $RANDOM, \"data\": 909090}"; done
 ```
