@@ -26,7 +26,7 @@ mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
     --set ssl_verify_upstream_trusted_ca=ssl/client.pem
 ```
 
-## curl Requests
+## URL calls
 ```bash
 # hit the https server directly
 curl --cacert ssl/client.pem  https://127.0.0.1:8000
