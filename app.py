@@ -16,7 +16,7 @@ async def read_body(receive):
     return body
 
 
-async def send_data(_id, data):
+async def es(_id, data):
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(limit=0), trust_env=True
     ) as session:
@@ -37,8 +37,7 @@ async def app(scope, receive, send):
     assert scope["method"] == "POST"
 
     body = json.loads(await read_body(receive))
-
-    await send_data(body.pop("id"), body)
+    await es(body.pop("id"), body)
 
     await send(
         {
