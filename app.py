@@ -1,7 +1,17 @@
 import json
+import logging
 
 import aiohttp
+import uvicorn
 from aiohttp.client_exceptions import ClientError, ClientOSError
+
+logger = logging.getLogger("uvicorn.access")
+
+logger.handlers[0].setFormatter(
+    uvicorn.logging.ColourizedFormatter(
+        "{asctime} {levelprefix} {message}", style="{", use_colors=True
+    )
+)
 
 
 async def read_body(receive):
