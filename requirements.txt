@@ -1,0 +1,15 @@
+uvicorn
+trustme
+isort
+black
+mitmproxy
+uncurl
+curlify
+websockets
+uvloop
+sniffio
+PyYAML
+python-dotenv
+httptools
+anyio
+watchgod
