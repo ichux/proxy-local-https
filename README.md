@@ -47,3 +47,22 @@ curl --insecure --proxy http://127.0.0.1:18080  https://127.0.0.1:8000
 
 >> response.text
 ```
+
+## High concurrency
+```bash
+
+# run this to spread to all the CPUs running on a PC
+uvicorn --ssl-certfile ssl/joined.pem \
+    --workers $(echo `python3 -c "import os; print(os.cpu_count())"`) \
+    app:app
+```
+
+##
+```bash
+pip install gunicorn
+
+gunicorn --preload --certfile ssl/joined.pem \
+    app:app \
+    -w $(echo `python3 -c "import os; print(os.cpu_count())"`) \
+    -k uvicorn.workers.UvicornWorker
+```
