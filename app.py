@@ -37,9 +37,8 @@ async def app(scope, receive, send):
     assert scope["method"] == "POST"
 
     body = json.loads(await read_body(receive))
-    _id = body.pop("id")
 
-    await send_data(_id, body)
+    await send_data(body.pop("id"), body)
 
     await send(
         {
