@@ -1,7 +1,12 @@
 import json
+from pathlib import Path
 
 import aiohttp
 from aiohttp.client_exceptions import ClientError, ClientOSError
+
+from logs import JobLog
+
+logger = JobLog.make_logger(Path(__file__).with_name("config.json"))
 
 
 async def read_body(receive):
