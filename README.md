@@ -22,9 +22,20 @@ mkdir -p ssl && rm -f joined.pem && \
 # On one terminal run this
 uvicorn --ssl-certfile ssl/keycert.pem app:app
 
-# On another terminal run this
+# On another terminal run this for port 18080
 mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
     --listen-port 18080 \
+    --console-layout vertical \
+    --console-layout-headers \
+    --set connection_strategy=lazy \
+    --set console_focus_follow=true \
+    --set console_palette=light \
+    --set ssl_verify_upstream_trusted_ca=ssl/client.pem
+
+# Or run on another terminal for a random port. And if you use this, 
+# change whereever you see 18080 to the system chosen random port number
+mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
+    --listen-port $RANDOM \
     --console-layout vertical \
     --console-layout-headers \
     --set connection_strategy=lazy \
