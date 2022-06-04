@@ -107,7 +107,7 @@ To test manually while the app is running, you can send a lot of requests with `
 for i in {1..1000}; do \
     curl -XPOST --cacert ssl/client.pem \
     https://127.0.0.1:8000 \
-    -d "{\"id\": $i, \"data\": $RANDOM}";
+    -d "{\"id\": $i, \"data\": $RANDOM}"
 done
 
 # with proxy
@@ -125,23 +125,39 @@ mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
 for i in {1..3}; do \
     curl -XPOST --insecure --proxy \
     http://127.0.0.1:18080 https://127.0.0.1:8000 \
-    -d "{\"id\": $i, \"data\": $RANDOM}";
+    -d "{\"id\": $i, \"data\": $RANDOM}"
 done
 
 # add the mitmproxy pem file while removing the '--insecure' flag
 for i in {1..3}; do \
     curl --cacert ~/.mitmproxy/mitmproxy-ca.pem \
     -XPOST --proxy http://127.0.0.1:18080 \
-    https://127.0.0.1:8000 -d "{\"id\": $i, \"data\": $RANDOM}";
+    https://127.0.0.1:8000 -d "{\"id\": $i, \"data\": $RANDOM}"
 done
 
 # generate errors to see how the logger works
 for i in {1..3}; do \
     curl -XPOST --cacert ssl/client.pem \
     https://127.0.0.1:8000 \
-    -d '{"id": $i, "data": $RANDOM}';
+    -d '{"id": $i, "data": $RANDOM}'
 done
 ```
 
 ## FYI
 https://httpolice.readthedocs.io/en/stable/index.html
+
+## Connect to a Server through TLS
+- openssl s_client -showcerts -servername server -connect localhost:9200 > cacert.pem
+- openssl x509 -inform PEM -in cacert.pem -text -out certdata.pem
+
+```bash
+for i in {1..3}; do \
+
+    curl -s -XPOST --cacert certdata.pem -u 'admin:admin' \
+    -H "Content-Type: application/json" \
+    https://127.0.0.1:9200/csdp/_doc/$i \
+    --data "{\"random\": $RANDOM}" | python3 -m json.tool
+
+    echo
+done
+```
