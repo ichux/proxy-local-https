@@ -8,9 +8,14 @@
 ## Set up
 1. Activate your virtual environment
 2. Do pip install -r requirements.txt
-3. run `mkdir ssl && cd ssl && python -m trustme && cd ..`
-4. run `cat ssl/server.key ssl/server.pem > ssl/joined.pem`
-5. Follow the below listed processes
+3. run 
+```bash
+mkdir ssl && cd ssl && \
+    python -m trustme && \
+    cat server.key server.pem > joined.pem && \
+    cd ..
+```
+4. Follow the processes listed below
 
 ```bash
 # On one terminal run this
@@ -72,8 +77,34 @@ gunicorn --preload --certfile ssl/joined.pem \
 To test manually while the app is running, you can send a lot of requests with `curl`.
 
 ```bash
-for i in {1..1000};
-    do curl -XPOST --cacert ssl/client.pem  https://127.0.0.1:8000 \
-    -d "{\"id\": $RANDOM, \"data\": $RANDOM}";
+
+# without proxy
+for i in {1..1000}; do \
+    curl -XPOST --cacert ssl/client.pem \
+    https://127.0.0.1:8000 \
+    -d "{\"id\": $i, \"data\": $RANDOM}";
+done
+
+# with proxy
+mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
+    --listen-port 18080 \
+    --console-layout vertical \
+    --console-layout-headers \
+    --set connection_strategy=lazy \
+    --set console_focus_follow=true \
+    --set console_palette=light \
+    --set ssl_verify_upstream_trusted_ca=ssl/client.pem
+
+for i in {1..3}; do \
+    curl -XPOST --insecure --proxy \
+    http://127.0.0.1:18080 https://127.0.0.1:8000 \
+    -d "{\"id\": $i, \"data\": $RANDOM}";
+done
+
+# generate errors to see how the logger works
+for i in {1..3}; do \
+    curl -XPOST --cacert ssl/client.pem \
+    https://127.0.0.1:8000 \
+    -d '{"id": $i, "data": $RANDOM}';
 done
 ```
