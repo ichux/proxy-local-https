@@ -128,6 +128,14 @@ for i in {1..3}; do \
     -d "{\"id\": $i, \"data\": $RANDOM}";
 done
 
+# add the mitmproxy pem file while removing the '--insecure' flag
+for i in {1..3}; do \
+    curl --cacert /Users/a13400566/.mitmproxy/mitmproxy-ca.pem \
+    -XPOST --proxy \
+    http://127.0.0.1:18080 https://127.0.0.1:8000 \
+    -d "{\"id\": $i, \"data\": $RANDOM}";
+done
+
 # generate errors to see how the logger works
 for i in {1..3}; do \
     curl -XPOST --cacert ssl/client.pem \
