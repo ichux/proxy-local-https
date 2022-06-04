@@ -10,16 +10,17 @@
 2. Do pip install -r requirements.txt
 3. run 
 ```bash
-mkdir ssl && cd ssl && \
-    python -m trustme && \
-    cat server.key server.pem > joined.pem && \
-    cd ..
+
+mkdir -p ssl && rm -f joined.pem && \
+    cd ssl && python -m trustme && \
+    cat server.key server.pem > keycert.pem \
+    && cd ..
 ```
 4. Follow the processes listed below
 
 ```bash
 # On one terminal run this
-uvicorn --ssl-certfile ssl/joined.pem app:app
+uvicorn --ssl-certfile ssl/keycert.pem app:app
 
 # On another terminal run this
 mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
@@ -58,7 +59,7 @@ curl --insecure --proxy http://127.0.0.1:18080  https://127.0.0.1:8000
 ```bash
 
 # run this to spread to all the CPUs running on a PC
-uvicorn --ssl-certfile ssl/joined.pem \
+uvicorn --ssl-certfile ssl/keycert.pem \
     --workers $(echo `python3 -c "import os; print(os.cpu_count())"`) \
     app:app
 ```
@@ -67,7 +68,7 @@ uvicorn --ssl-certfile ssl/joined.pem \
 ```bash
 pip install gunicorn
 
-gunicorn --preload --certfile ssl/joined.pem \
+gunicorn --preload --certfile ssl/keycert.pem \
     app:app \
     -w $(echo `python3 -c "import os; print(os.cpu_count())"`) \
     -k uvicorn.workers.UvicornWorker
