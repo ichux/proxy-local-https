@@ -131,9 +131,8 @@ done
 # add the mitmproxy pem file while removing the '--insecure' flag
 for i in {1..3}; do \
     curl --cacert ~/.mitmproxy/mitmproxy-ca.pem \
-    -XPOST --proxy \
-    http://127.0.0.1:18080 https://127.0.0.1:8000 \
-    -d "{\"id\": $i, \"data\": $RANDOM}";
+    -XPOST --proxy http://127.0.0.1:18080 \
+    https://127.0.0.1:8000 -d "{\"id\": $i, \"data\": $RANDOM}";
 done
 
 # generate errors to see how the logger works
