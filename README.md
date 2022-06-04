@@ -1,9 +1,17 @@
+## Proxy Local HTTPS
+This project uses `uvicorn` to demonstrate:
+- how to send a post request to `OpenSearch`
+- use self generated certificate with it `uvicorn`
+- send direct requests to `uvicorn` through `curl`
+- proxy requests to `uvicorn` through `mitmproxy`
+- how to use all generated pem/key files
+
 ## Assumptions made:
 - You have your environment set up and in a virtual environment
 - You have an OpenSearch node or cluster running on https://localhost:9200
-- Minimum Python version: 3.10
-- Your port `18080` is accessible, else, replace it with `$RANDOM`.
-- If you replaced your port with `$RANDOM`, also be sure to replace it with the real value where you see `18080`.
+- Minimum `Python` version: *3.10*
+- Your port `18080` is accessible, else, replace it with `$RANDOM`
+- If you replaced your port with `$RANDOM`, be sure to replace it with the real value when you see `18080`
 
 ## Set up
 1. Activate your virtual environment
@@ -32,8 +40,9 @@ mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
     --set console_palette=light \
     --set ssl_verify_upstream_trusted_ca=ssl/client.pem
 
-# Or run on another terminal for a random port. And if you use this, 
-# change whereever you see 18080 to the system chosen random port number
+# Or run this, on another terminal, for a random port. 
+# And if you used this, change where you see 18080 
+# to the system chosen random port number
 mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
     --listen-port $RANDOM \
     --console-layout vertical \
