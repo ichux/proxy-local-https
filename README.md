@@ -35,6 +35,8 @@ mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
     --listen-port 18080 \
     --console-layout vertical \
     --console-layout-headers \
+    --set anticache=true \
+    --set anticomp=true \
     --set connection_strategy=lazy \
     --set console_focus_follow=true \
     --set console_palette=light \
@@ -47,6 +49,8 @@ mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
     --listen-port $RANDOM \
     --console-layout vertical \
     --console-layout-headers \
+    --set anticache=true \
+    --set anticomp=true \
     --set connection_strategy=lazy \
     --set console_focus_follow=true \
     --set console_palette=light \
@@ -111,6 +115,8 @@ mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
     --listen-port 18080 \
     --console-layout vertical \
     --console-layout-headers \
+    --set anticache=true \
+    --set anticomp=true \
     --set connection_strategy=lazy \
     --set console_focus_follow=true \
     --set console_palette=light \
@@ -129,3 +135,6 @@ for i in {1..3}; do \
     -d '{"id": $i, "data": $RANDOM}';
 done
 ```
+
+## FYI
+https://httpolice.readthedocs.io/en/stable/index.html
