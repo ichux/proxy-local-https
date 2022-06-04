@@ -31,7 +31,7 @@ class InterceptHandler(logging.Handler):
         log.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
 
 
-class JobLog:
+class Logs:
     @classmethod
     def make_logger(cls, config_path: Path):
 
