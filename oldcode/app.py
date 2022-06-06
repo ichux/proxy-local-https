@@ -3,6 +3,7 @@ from pathlib import Path
 
 import aiohttp
 from aiohttp.client_exceptions import ClientError, ClientOSError
+
 from logs import Logs
 
 logger = Logs.make_logger(Path(__file__).parent.with_name("config.json"))

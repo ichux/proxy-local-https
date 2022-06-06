@@ -25,6 +25,7 @@ class Schema(SchemaClass):
 
 if not (INDEXED_DB := Path(__file__).parent / "index_db").exists():
     INDEXED_DB.mkdir(parents=True, exist_ok=True)
+
 if (storage := FileStorage(INDEXED_DB)).index_exists(INDEX_NAME):
     ix = storage.open_index(INDEX_NAME)
 else:
@@ -34,6 +35,7 @@ else:
 async def wh_write(data):
     data["datetime"] = datetime.fromisoformat(data["datetime"])
     data["id"] = str(data["id"])
+
     writer = AsyncWriter(ix)
     writer.add_document(**data)
     writer.commit()
