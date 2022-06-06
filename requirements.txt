@@ -16,3 +16,4 @@ watchgod
 aiohttp
 loguru
 Whoosh
+requests
