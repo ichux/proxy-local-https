@@ -18,14 +18,9 @@ def post_sync(data):
 
 
 async def post_async(data):
-    async with aiohttp.ClientSession(
-        connector=aiohttp.TCPConnector(limit=0), trust_env=True
-    ) as session:
-        async with session.post(
-            URL,
-            json=data,
-            ssl=False,
-        ) as response:
+    connector = aiohttp.TCPConnector(limit=0, ssl=SSL_CTX)
+    async with aiohttp.ClientSession(connector=connector, trust_env=True) as session:
+        async with session.post(URL, json=data) as response:
             return response
 
 
