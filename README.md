@@ -186,6 +186,14 @@ for i in {1..3}; do \
 done
 ```
 
+## Local Test
+```python
+
+# runs the sync and async version while port 8000 is on
+# TLS is used
+python by_requests.py
+``` 
+
 ## FYI
 https://httpolice.readthedocs.io/en/stable/index.html
 
