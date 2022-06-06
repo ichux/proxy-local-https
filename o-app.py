@@ -4,21 +4,10 @@ from pathlib import Path
 import aiohttp
 from aiohttp.client_exceptions import ClientError, ClientOSError
 
+import utils
 from logs import Logs
 
 logger = Logs.make_logger(Path(__file__).with_name("config.json"))
-
-
-async def read_body(receive):
-    body = b""
-    more_body = True
-
-    while more_body:
-        message = await receive()
-        body += message.get("body", b"")
-        more_body = message.get("more_body", False)
-
-    return body
 
 
 async def es(_id, data):
@@ -41,7 +30,7 @@ async def app(scope, receive, send):
     assert scope["type"] == "http"
     assert scope["method"] == "POST"
 
-    body = json.loads(await read_body(receive))
+    body = json.loads(await utils.read_body(receive))
     await es(body.pop("id"), body)
 
     await send(
