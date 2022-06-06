@@ -9,3 +9,5 @@ certdata
 certdata.pem
 client.pem
 cacert.pem
+/index_db
+/venv
