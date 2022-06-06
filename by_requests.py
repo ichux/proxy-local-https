@@ -25,16 +25,13 @@ async def post_async(data):
 
 
 async def main():
-    payloads = [
-        {
+    for _ in range(10):
+        payload = {
             "id": _,
             "emitter": f"emitter.fake{_}",
             "log": "INFO",
             "datetime": str(datetime.now()),
         }
-        for _ in range(10)
-    ]
-    for payload in payloads:
         sync_res = post_sync(payload)
         async_res = await post_async(payload)
         print((sync_res.status_code, async_res.status))
