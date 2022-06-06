@@ -34,8 +34,8 @@ async def main():
         }
         sync_res = post_sync(payload)
         async_res = await post_async(payload)
-        
-        print((sync_res.status_code, async_res.status))
+
+        print((_, sync_res.status_code, async_res.status))
 
 
 if __name__ == "__main__":
