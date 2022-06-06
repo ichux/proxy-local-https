@@ -128,10 +128,53 @@ for i in {1..3}; do \
     -d "{\"id\": $i, \"data\": $RANDOM}"
 done
 
+# intercept and respond
+mitmproxy --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
+    --scripts respond.py \
+    --listen-port 18080 \
+    --console-layout vertical \
+    --console-layout-headers \
+    --set anticache=true \
+    --set anticomp=true \
+    --set connection_strategy=lazy \
+    --set console_focus_follow=true \
+    --set console_palette=light \
+    --set ssl_verify_upstream_trusted_ca=ssl/client.pem
+
+for i in {1..3}; do \
+    curl -XPOST --insecure --proxy \
+    http://127.0.0.1:18080 https://127.0.0.1:8000 \
+    -d "{\"id\": $i, \"data\": $RANDOM}"
+done
+
+# reverse host
+# in this instance 'localhost:8000' can be non-existent
+mitmproxy --mode reverse:localhost:8000 \
+    --save-stream-file dumps/$(date +%Y%m%d.%H%M%S.%s.%Z).mitm \
+    --scripts respond.py \
+    --listen-port 18080 \
+    --console-layout vertical \
+    --console-layout-headers \
+    --set anticache=true \
+    --set anticomp=true \
+    --set connection_strategy=lazy \
+    --set console_focus_follow=true \
+    --set console_palette=light \
+    --set ssl_verify_upstream_trusted_ca=ssl/client.pem
+
+for i in {1..3}; do \
+    curl -XPOST -H "Content-Type: application/json" \
+    -H "User-Agent: ReverseWithMitm" \
+    http://127.0.0.1:18080 \
+    -d "{\"id\": $i, \"data\": $RANDOM}"
+done
+
 # add the mitmproxy pem file while removing the '--insecure' flag
 for i in {1..3}; do \
     curl --cacert ~/.mitmproxy/mitmproxy-ca.pem \
-    -XPOST --proxy http://127.0.0.1:18080 \
+    -XPOST -H "Content-Type: application/json" \
+    -H "User-Agent: ThruMitm" \
+    --proxy http://127.0.0.1:18080 \
     https://127.0.0.1:8000 -d "{\"id\": $i, \"data\": $RANDOM}"
 done
 
