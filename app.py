@@ -4,9 +4,9 @@ from pathlib import Path
 import aiohttp
 from aiohttp.client_exceptions import ClientError, ClientOSError
 
-from logs import JobLog
+from logs import Logs
 
-logger = JobLog.make_logger(Path(__file__).with_name("config.json"))
+logger = Logs.make_logger(Path(__file__).with_name("config.json"))
 
 
 async def read_body(receive):
@@ -33,8 +33,8 @@ async def es(_id, data):
                 ssl=False,
             ):
                 return
-        except (ClientError, ClientOSError):
-            return
+        except (ClientError, ClientOSError) as excecption:
+            raise excecption
 
 
 async def app(scope, receive, send):

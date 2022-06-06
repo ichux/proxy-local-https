@@ -4,3 +4,8 @@ config/
 dumps/
 ssl/
 access.log
+
+certdata
+certdata.pem
+client.pem
+cacert.pem

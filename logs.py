@@ -31,7 +31,7 @@ class InterceptHandler(logging.Handler):
         log.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
 
 
-class JobLog:
+class Logs:
     @classmethod
     def make_logger(cls, config_path: Path):
 
@@ -66,15 +66,15 @@ class JobLog:
         logging.basicConfig(handlers=[InterceptHandler()], level=0)
         logging.getLogger("uvicorn.access").handlers = [InterceptHandler()]
 
-        for _log in ["uvicorn", "uvicorn.error"]:
-            _logger = logging.getLogger(_log)
-            _logger.handlers = [InterceptHandler()]
+        for ulog in ["uvicorn", "uvicorn.error"]:
+            ulogger = logging.getLogger(ulog)
+            ulogger.handlers = [InterceptHandler()]
 
         return logger.bind(request_id=None, method=None)
 
     @classmethod
-    def load_logging_config(cls, config_path):
+    def load_logging_config(cls, location):
         config = None
-        with open(config_path) as config_file:
-            config = json.load(config_file)
+        with open(location) as fyl:
+            config = json.load(fyl)
         return config
