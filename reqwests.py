@@ -7,7 +7,8 @@ import aiohttp
 import requests
 
 URL: str = "https://localhost:8000/"
-SSL_CERT = Path(__file__).parent / "ssl/client.pem"
+SSL_CERT = Path(__file__).parent / "ssl" / "client.pem"
+
 SSL_CTX = ssl.create_default_context()
 SSL_CTX.load_verify_locations(SSL_CERT)
 
