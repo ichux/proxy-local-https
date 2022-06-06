@@ -14,8 +14,7 @@ SSL_CTX.load_verify_locations(SSL_CERT)
 
 
 def post_sync(data):
-    response = requests.post(URL, json=data, verify=(SSL_CERT))
-    return response
+    return requests.post(URL, json=data, verify=(SSL_CERT))
 
 
 async def post_async(data):
