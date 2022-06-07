@@ -1,12 +1,18 @@
 import json
 from datetime import datetime
 from pathlib import Path
+from sqlite_utils import Database
 
 import uvicorn
 from logs import Logs
 from index import buf_writer
+from whoosh.index import LockError
+from whoosh.writing import IndexingError
+
 
 logger = Logs.make_logger(Path(__file__).with_name("config.json"))
+db = Database("failures.db")
+
 
 async def read_body(receive):
     body = b""
@@ -28,7 +34,15 @@ async def app(scope, receive, send):
     data["datetime"] = datetime.fromisoformat(data["datetime"])
     _id = data["id"]
     data["id"] = str(_id)
-    buf_writer.add_document(**data)
+
+    try:
+        buf_writer.add_document(**data)
+    except (IndexingError, LockError):
+        reader = buf_writer._get_ram_reader()  # Represents the in-memory buffer
+        # Save all data currently in buffer
+        records = [r for (_, r) in reader.iter_docs()]
+        db["records"].insert_all(records)
+
     logger.info(f"Record id^{_id} saved")
 
     await send(

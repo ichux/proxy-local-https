@@ -5,8 +5,10 @@ import aiohttp
 from aiohttp.client_exceptions import ClientError, ClientOSError
 
 from logs import Logs
+from sqlite_utils import Database
 
 logger = Logs.make_logger(Path(__file__).parent.with_name("config.json"))
+db = Database("failures.db")
 
 
 async def es(_id, data):
@@ -21,8 +23,8 @@ async def es(_id, data):
                 ssl=False,
             ):
                 return
-        except (ClientError, ClientOSError) as excecption:
-            raise excecption
+        except (ClientError, ClientOSError):
+            db["records"].insert({"id": _id, **data})
 
 
 async def read_body(receive):

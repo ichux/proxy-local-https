@@ -17,3 +17,5 @@ aiohttp
 loguru
 Whoosh
 requests
+sqlite-utils
+

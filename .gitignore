@@ -11,3 +11,5 @@ client.pem
 cacert.pem
 /index_db
 /venv
+**/*.db
+**/*.db-journal

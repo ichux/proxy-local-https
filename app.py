@@ -2,15 +2,17 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+from sqlite_utils import Database
 from whoosh.analysis import NgramTokenizer
 from whoosh.fields import DATETIME, ID, TEXT, SchemaClass
 from whoosh.filedb.filestore import FileStorage
-from whoosh.index import FileIndex
-from whoosh.writing import AsyncWriter
+from whoosh.index import FileIndex, LockError
+from whoosh.writing import AsyncWriter, IndexingError
 
 from logs import Logs
 
 logger = Logs.make_logger(Path(__file__).with_name("config.json"))
+db = Database("failures.db")
 
 INDEX_NAME = "TAILLOG"
 ix: FileIndex
@@ -39,8 +41,11 @@ async def wh_write(data):
 
     writer = AsyncWriter(ix)
     writer.add_document(**data)
-    writer.commit()
-    logger.info(f"Record id^{_id} saved")
+    try:
+        writer.commit()
+        logger.info(f"Record id^{_id} saved")
+    except (IndexingError, LockError):
+        db["records"].insert(data)
 
 
 async def read_body(receive):

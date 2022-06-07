@@ -25,4 +25,4 @@ if (storage := FileStorage(INDEXED_DB)).index_exists(INDEX_NAME):
 else:
     ix = storage.create_index(Schema, INDEX_NAME)
 
-buf_writer = BufferedWriter(ix, limit=10)
+buf_writer = BufferedWriter(ix, limit=200)
