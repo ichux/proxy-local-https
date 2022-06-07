@@ -12,7 +12,7 @@ from logs import Logs
 
 logger = Logs.make_logger(Path(__file__).with_name("config.json"))
 
-INDEX_NAME = "INDEX"
+INDEX_NAME = "TAILLOG"
 ix: FileIndex
 
 
@@ -34,11 +34,13 @@ else:
 
 async def wh_write(data):
     data["datetime"] = datetime.fromisoformat(data["datetime"])
-    data["id"] = str(data["id"])
+    _id = data["id"]
+    data["id"] = str(_id)
 
     writer = AsyncWriter(ix)
     writer.add_document(**data)
     writer.commit()
+    logger.info(f"Record id^{_id} saved")
 
 
 async def read_body(receive):
