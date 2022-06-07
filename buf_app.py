@@ -1,14 +1,14 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from sqlite_utils import Database
 
 import uvicorn
-from logs import Logs
-from index import buf_writer
+from sqlite_utils import Database
 from whoosh.index import LockError
 from whoosh.writing import IndexingError
 
+from index import buf_writer
+from logs import Logs
 
 logger = Logs.make_logger(Path(__file__).with_name("config.json"))
 db = Database("failures.db")
@@ -37,13 +37,12 @@ async def app(scope, receive, send):
 
     try:
         buf_writer.add_document(**data)
-    except (IndexingError, LockError):
+        logger.info(f"Record id^{_id} saved")
+    except (IndexingError, LockError) as exception:
         reader = buf_writer._get_ram_reader()  # Represents the in-memory buffer
         # Save all data currently in buffer
-        records = [r for (_, r) in reader.iter_docs()]
-        db["records"].insert_all(records)
-
-    logger.info(f"Record id^{_id} saved")
+        db["records"].insert_all([r for (_, r) in reader.iter_docs()])
+        logger.info(f"Recovered from an error!")
 
     await send(
         {
@@ -65,7 +64,9 @@ async def app(scope, receive, send):
 
 if __name__ == "__main__":
     try:
-        ssl_certfile = Path(__file__).parent / "ssl/keycert.pem"
-        uvicorn.run("buf_app:app", host="127.0.0.1", port=8000, ssl_certfile=ssl_certfile)
+        ssl_certfile = Path(__file__).parent / "ssl" / "keycert.pem"
+        uvicorn.run(
+            "buf_app:app", host="127.0.0.1", port=8000, ssl_certfile=ssl_certfile
+        )
     except KeyboardInterrupt:
         buf_writer.close()

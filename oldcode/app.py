@@ -3,9 +3,9 @@ from pathlib import Path
 
 import aiohttp
 from aiohttp.client_exceptions import ClientError, ClientOSError
+from sqlite_utils import Database
 
 from logs import Logs
-from sqlite_utils import Database
 
 logger = Logs.make_logger(Path(__file__).parent.with_name("config.json"))
 db = Database("failures.db")
