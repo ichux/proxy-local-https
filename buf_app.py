@@ -37,8 +37,7 @@ async def app(scope, receive, send):
 
     try:
         buf_writer.add_document(**data)
-        logger.info(f"Record id^{_id} saved")
-    except (IndexingError, LockError) as exception:
+    except (IndexingError, LockError):
         reader = buf_writer._get_ram_reader()  # Represents the in-memory buffer
         # Save all data currently in buffer
         db["records"].insert_all([r for (_, r) in reader.iter_docs()])
