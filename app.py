@@ -43,9 +43,9 @@ async def wh_write(data):
     writer.add_document(**data)
     try:
         writer.commit()
-        logger.info(f"Record id^{_id} saved")
     except (IndexingError, LockError):
         db["records"].insert(data)
+        logger.info(f"Recovered from an error!")
 
 
 async def read_body(receive):
