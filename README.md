@@ -198,8 +198,14 @@ python by_requests.py
 https://httpolice.readthedocs.io/en/stable/index.html
 
 ## Connect to a Server through TLS
-- openssl s_client -showcerts -servername server -connect localhost:9200 > cacert.pem
-- openssl x509 -inform PEM -in cacert.pem -text -out certdata.pem
+```bash
+openssl s_client -showcerts -servername server -connect localhost:9200 > cacert.pem
+openssl x509 -inform PEM -in cacert.pem -text -out certdata.pem
+
+# 
+openssl s_client -connect facebook.com:443 > cacert.pem
+openssl x509 -inform PEM -in cacert.pem -text -out certdata.pem
+```
 
 ```bash
 for i in {1..3}; do \
