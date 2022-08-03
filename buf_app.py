@@ -3,12 +3,11 @@ from datetime import datetime
 from pathlib import Path
 
 import uvicorn
+from index import buf_writer
+from logs import Logs
 from sqlite_utils import Database
 from whoosh.index import LockError
 from whoosh.writing import IndexingError
-
-from index import buf_writer
-from logs import Logs
 
 logger = Logs.make_logger(Path(__file__).with_name("config.json"))
 db = Database("failures.db")

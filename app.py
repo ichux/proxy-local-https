@@ -2,14 +2,13 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+from logs import Logs
 from sqlite_utils import Database
 from whoosh.analysis import NgramTokenizer
 from whoosh.fields import DATETIME, ID, TEXT, SchemaClass
 from whoosh.filedb.filestore import FileStorage
 from whoosh.index import FileIndex, LockError
 from whoosh.writing import AsyncWriter, IndexingError
-
-from logs import Logs
 
 logger = Logs.make_logger(Path(__file__).with_name("config.json"))
 db = Database("failures.db")
